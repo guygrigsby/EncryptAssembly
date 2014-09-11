@@ -27,7 +27,7 @@ main:
   mov r13, [left0]           ;
   mov rax, left2
   mov rbx, [encrypt]
-  call _do_half
+  call _do_half         ; pushes rip onto stack and jumps to _do_half
 
   mov r8, [left2]          ;
   mov r9, [key2]        ;
@@ -46,7 +46,7 @@ main:
   xor rbx, rbx
   call _do_half
 
-  mov r8, [right0]          ;
+  ;mov r8, [right0]     ; already there
   mov r9, [key0]        ;
   mov r10, [key1]       ;
   mov r11, [delta1]     ;
@@ -91,5 +91,7 @@ end:
   mov rdi, pFormat      ; prinf format
   mov rsi, r8           ; what to print
   xor rax, rax          ; printf uses rax for something
+  push r8               ; printf uses r8
   call printf           
-  ret
+  pop r8
+  ret                   ; pops top of stack into rip
