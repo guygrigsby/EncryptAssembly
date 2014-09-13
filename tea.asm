@@ -28,7 +28,7 @@ main:
 
   mov r15, [mask]
   ;registers for the call to _TEA_half are as follows
-  mov r8, [right0]      ; inner msg half used 4 times
+  mov r8, [right0]      ; inner msg half used 3 times
   mov r9, [key0]        ; first part of key
   mov r10, [key1]       ; second part of key
   mov r11, [delta1]     ; delta
