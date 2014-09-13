@@ -11,7 +11,6 @@ SECTION .data
   key3:       dq    0xE2468AC0
   delta1:     dq    0x11111111
   delta2:     dq    0x22222222
-  pFormat:    db    "%x", 10, 0
   mFormat:    db    "m = %x%x", 10, 0
   cFormat:    db    "c = %x%x", 10, 0
   encrypt:    dq    0x1
@@ -24,7 +23,7 @@ main:
   mov rdi, mFormat
   mov rsi, [left0]
   mov rdx, [right0]
-  xor rax, rax          ; printf uses rax for something
+  xor rax, rax          ; printf uses rax for # of vector args
   call printf
 
   mov r15, [mask]
@@ -50,7 +49,7 @@ main:
   mov rdi, cFormat
   mov rsi, [left2]
   mov rdx, [right2]
-  xor rax, rax          ; printf uses rax for something
+  xor rax, rax          ; printf uses rax for # of vector args
   call printf
 
   mov r8, [left2]          ;
@@ -73,7 +72,7 @@ main:
   
   mov rsi, r8
   mov rdi, mFormat
-  xor rax, rax          ; printf uses rax for something
+  xor rax, rax          ; printf uses rax for # of vector args
   call printf
   
   
