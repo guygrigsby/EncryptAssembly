@@ -16,7 +16,7 @@ SECTION .data
   encrypt:    dq    0x1
   mask:       dq    0x00000000FFFFFFFF
 SECTION .text
-  global main
+  global main, _TEA_half
   extern printf
 main:
 
@@ -27,15 +27,15 @@ main:
   call printf
 
   mov r15, [mask]
-  
-  mov r8, [right0]          ;
-  mov r9, [key0]        ;
-  mov r10, [key1]       ;
-  mov r11, [delta1]     ;
-  mov r13, [left0]           ;
-  mov rax, left2
-  mov rbx, [encrypt]
-  call _do_half         ; pushes rip onto stack and jumps to _do_half
+  ;registers for the call to _TEA_half are as follows
+  mov r8, [right0]      ; inner msg half used 4 times
+  mov r9, [key0]        ; first part of key
+  mov r10, [key1]       ; second part of key
+  mov r11, [delta1]     ; delta
+  mov r13, [left0]      ; outermost msg half in function
+  mov rax, left2        ; pointer to store result (only needed for ENCRYPT)
+  mov rbx, [encrypt]    ; 1 to encrypt or 0 to decrypt
+  call _TEA_half         ; pushes rip onto stack and jumps to _TEA_half
 
   mov r8, [left2]          ;
   mov r9, [key2]        ;
@@ -44,11 +44,11 @@ main:
   mov r13, [right0]           ;
   mov rax, right2
   mov rbx, [encrypt]
-  call _do_half
+  call _TEA_half
   
-  mov rdi, cFormat
-  mov rsi, [left2]
-  mov rdx, [right2]
+  mov rdi, cFormat      ; format string for printf
+  mov rsi, [left2]      ; arg 2
+  mov rdx, [right2]     ; arg 1
   xor rax, rax          ; printf uses rax for # of vector args
   call printf
 
@@ -58,7 +58,7 @@ main:
   mov r11, [delta2]     ;
   mov r13, [right2]           ;
   xor rbx, rbx
-  call _do_half
+  call _TEA_half
   
   mov rdx, r8
 
@@ -68,7 +68,7 @@ main:
   mov r11, [delta1]     ;
   mov r13, [left2]           ;
   xor rbx, rbx
-  call _do_half
+  call _TEA_half
   
   mov rsi, r8
   mov rdi, mFormat
@@ -81,7 +81,7 @@ main:
   mov rbx,0            ; exit with error code 0
   int 80h              ; call the kernel
 
-_do_half:
+_TEA_half:
   mov r12, r8
   shl r8, 4             ; shift left by 4
   add r9, r8            ; add key to msg << 4
