@@ -1,1 +1,2 @@
-Implementing Tiny Encryption Algorithm in NASM 64 bit assembly
+
+Implementing Tiny Encryption Algorithm in NASM AMD64 assembly on Linux
